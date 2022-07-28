@@ -56,10 +56,10 @@ VirtualKeyCodes = {
   'kana': 0x68, # kVK_JIS_Kana
 
   'Shift': 0x38, # kVK_Shift
-#   'command': 0x37, # kVK_Command
+  'Command': 0x37, # kVK_Command
 #   'ctrl': 0x3b, # kVK_Control
   'Ctrl': 0x37, # kVK_Control
-#   'option': 0x3a, # kVK_Option
+  'Option': 0x3a, # kVK_Option
   'Alt': 0x3a, # kVK_Option
 
   'Left': 0x7b, # kVK_LeftArrow

@@ -2,7 +2,8 @@
   "speed": 10,
 
   "modulation": {
-    "1" : "mouse_x"
+    "1" : "mouse_x",
+    "77" : "mouse_y"
   },
   
   "note": {
@@ -13,10 +14,10 @@
     "G5": "O",
     
     "C#3": "V",
-    "D3": "F",
+    "D3": "Q",
     "D#3": "C",
     "E3": "X",
-    "F#3": "Q",
+    "F#3": "F",
     "G3": "L",
     "G#3": "J",
     
@@ -56,6 +57,8 @@
     "B5": "Backspace",
     "C6": "Enter",
     "D6": "Shift",
+    "E6": "Command",
+    "F6": "Option",
     "C#6": "eisu",
     "D#6": "kana"
   }
