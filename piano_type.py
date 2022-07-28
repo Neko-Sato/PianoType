@@ -21,10 +21,9 @@ class MIDIStream:
   async def __aiter__(self):
     while True:
       try:
-        if self.__input.poll():
-          data = self.__input.read(self.num_events)
-          for event in midi.midis2events(data, self.__input.device_id):
-            yield event
+        data = self.__input.read(self.num_events)
+        for event in midi.midis2events(data, self.__input.device_id):
+          yield event
         await asyncio.sleep(0.1)
       except midi.MidiException:
         print("MIDI device is closed.")
