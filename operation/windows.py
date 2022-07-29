@@ -67,7 +67,6 @@ VirtualKeyCodes = {
 }
 
 def keyAction(key, isDown):
-  print(key, isDown)
   vkc = VirtualKeyCodes.get(key)
   if vkc is None:
     return
