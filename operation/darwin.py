@@ -1,7 +1,6 @@
 import Quartz
 import AppKit
 
-
 def mouseMove(xOffset=0, yOffset=0):
   loc = AppKit.NSEvent.mouseLocation()
   x, y = int(loc.x) + xOffset, int(Quartz.CGDisplayPixelsHigh(0) - loc.y) + yOffset
@@ -76,5 +75,8 @@ VirtualKeyCodes = {
 }
 
 def keyAction(key, isDown):
-    event = Quartz.CGEventCreateKeyboardEvent(None, VirtualKeyCodes[key], isDown)
-    Quartz.CGEventPost(Quartz.kCGHIDEventTap, event)
+  vkc = VirtualKeyCodes.get(key)
+  if vkc is None:
+    return
+  event = Quartz.CGEventCreateKeyboardEvent(None, vkc, isDown)
+  Quartz.CGEventPost(Quartz.kCGHIDEventTap, event)

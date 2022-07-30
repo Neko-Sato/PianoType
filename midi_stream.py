@@ -2,6 +2,25 @@ import asyncio
 import rtmidi
 import rtmidi.midiutil
 
+async def open_midistream(
+  port=None, 
+  api=rtmidi.API_UNSPECIFIED, 
+  use_virtual=False,
+  interactive=True,
+  client_name=None,
+  port_name=None,
+):
+  return MIDIStream(
+    port=port,
+    api=api,
+    use_virtual=use_virtual,
+    interactive=interactive,
+    client_name=client_name,
+    port_name=port_name,
+    loop=asyncio.get_running_loop(),
+  )
+
+
 class MIDIStream:
   def __init__(
     self, 
