@@ -19,12 +19,26 @@ from midi_to_ansi_note import midi_to_ansi_note
 class PianoType:
   version = "0.0.5"
   default_layoutfile_path = os.path.join(os.path.dirname(__file__), "layout.json")
-  def __init__(self, debug=False, layoutfile_path=default_layoutfile_path):
-    self.load_layout(layoutfile_path)
+  def __init__(self, debug=False):
+    self.init_layout()
     self.debug = debug
-  def load_layout(self, layoutfile_path):
-    self.__config_file = open(layoutfile_path, 'r')
-    self.__config = json.load(self.__config_file)
+  def init_layout(self):
+    self.__config = {}
+    self.__config.setdefault("speed", 10)
+    self.__config.setdefault("modulation", {})
+    self.__config.setdefault("note", {})
+  def load_layout(self, layoutfile_path=default_layoutfile_path):
+    with open(layoutfile_path, 'r') as file:
+      self.__config = json.load(file)
+  def save_layout(self, layoutfile_path):
+    with open(layoutfile_path, 'w') as file:
+      json.dump(self.__config, file, indent=2)
+  def setting_layout(self, key, event):
+    status = int(event[0]/16)*16
+    if status == 176:
+      self.__config["modulation"][str(event[1])] = key
+    elif status == 144:
+      self.__config["modulation"][midi_to_ansi_note(event[1])] = key
   async def converter(self, event):
     status = int(event[0]/16)*16
     if status == 176:
@@ -69,20 +83,13 @@ class PianoType:
     # else:
     #   keyAction(key, isOn)
 
-  async def __run(self):
+  async def run(self, *args, **kwargs):
     print('\033[32m'+"PianoType "+self.version+" is running!"+'\033[0m')
-    midi_stream = await open_midistream()
+    midi_stream = await open_midistream(*args, **kwargs)
     try:
       async for event in midi_stream:
         asyncio.ensure_future(self.converter(event))
     except KeyboardInterrupt:
       ...
     print("Close...")
-    midi_stream.close()    
-
-  def run(self):
-    loop = asyncio.new_event_loop()
-    try:
-      loop.run_until_complete(self.__run())
-    except KeyboardInterrupt:
-      ...
+    midi_stream.close()

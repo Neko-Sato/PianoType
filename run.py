@@ -1,13 +1,19 @@
+from piano_type import PianoType
 import argparse
-import piano_type
 
 parser = argparse.ArgumentParser()
 parser.add_argument("--debug", action='store_true')
 
+args = parser.parse_args()
+
 if __name__ == "__main__":
-  args = parser.parse_args()
-  pianotype = piano_type.PianoType(
+  import asyncio
+  
+  pianotype = PianoType(
     debug=args.debug,
   )
-  pianotype.run(
-  )
+  pianotype.load_layout()
+  try:
+    asyncio.run(pianotype.run())
+  except KeyboardInterrupt:
+    ...

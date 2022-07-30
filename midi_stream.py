@@ -43,6 +43,7 @@ class MIDIStream:
     self.__loop = loop if loop else asyncio.get_running_loop()
     self.__queue = asyncio.Queue()
     self.__midi.set_callback(self.__callback)
+    self.__isClosed = False
   def __callback(self, msg, data):
     try:
       asyncio.run_coroutine_threadsafe(
@@ -54,7 +55,11 @@ class MIDIStream:
   def __aiter__(self):
     return self
   async def __anext__(self):
+    if self.__isClosed:
+      raise StopAsyncIteration
     return await self.__queue.get()
   def close(self):
+    self.__isClosed = True
     self.__midi.cancel_callback()
     self.__midi.close_port()
+  

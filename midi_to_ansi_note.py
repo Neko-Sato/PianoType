@@ -1,3 +1,4 @@
+
 num2note = {
   0 : "C",
   1 : "C#",
@@ -12,6 +13,7 @@ num2note = {
   10 : "A#",
   11 : "B",
 }
+
 
 def midi_to_ansi_note(n):
   note, number = divmod(n, 12)
