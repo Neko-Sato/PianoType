@@ -57,7 +57,9 @@ class MIDIStream:
   async def __anext__(self):
     if self.__isClosed:
       raise StopAsyncIteration
-    return await self.__queue.get()
+    result = await self.__queue.get()
+    self.__queue.task_done()
+    return result
   def close(self):
     self.__isClosed = True
     self.__midi.cancel_callback()

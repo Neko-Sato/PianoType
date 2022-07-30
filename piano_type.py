@@ -33,12 +33,6 @@ class PianoType:
   def save_layout(self, layoutfile_path):
     with open(layoutfile_path, 'w') as file:
       json.dump(self.__config, file, indent=2)
-  def setting_layout(self, key, event):
-    status = int(event[0]/16)*16
-    if status == 176:
-      self.__config["modulation"][str(event[1])] = key
-    elif status == 144:
-      self.__config["modulation"][midi_to_ansi_note(event[1])] = key
   async def converter(self, event):
     status = int(event[0]/16)*16
     if status == 176:
@@ -83,6 +77,24 @@ class PianoType:
     # else:
     #   keyAction(key, isOn)
 
+  # async def mode_setting(self, *args, **kwargs):
+  #   midi_stream = await open_midistream(*args, **kwargs)
+  #   while True:
+  #     # await midi_stream.clear()
+  #     event = await anext(midi_stream)
+  #     status = int(event[0]/16)*16
+  #     if status == 176:
+  #       print(f"modulation : {event[1]} -> {self.__config['modulation'].get(str(event[1]), 'None')}")
+  #       key = input(">>")
+  #       if key != "":
+  #         self.__config["modulation"][str(event[1])] = key
+  #     elif not(status == 128 or event[2] == 0):
+  #       note = midi_to_ansi_note(event[1])
+  #       print(f"note : {note} -> {self.__config['note'].get(note, 'None')}")
+  #       key = input(f">>")
+  #       if key != "":
+  #         self.__config["note"][note] = key
+      
   async def run(self, *args, **kwargs):
     print('\033[32m'+"PianoType "+self.version+" is running!"+'\033[0m')
     midi_stream = await open_midistream(*args, **kwargs)
