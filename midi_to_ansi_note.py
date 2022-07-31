@@ -16,5 +16,5 @@ num2note = {
 
 
 def midi_to_ansi_note(n):
-  note, number = divmod(n, 12)
+  number, note = divmod(n, 12)
   return f"{num2note[note]}{number-1}"
