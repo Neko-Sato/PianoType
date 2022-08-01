@@ -41,9 +41,9 @@ class MIDIStream:
       port_name=port_name,
     )
     self.__loop = loop if loop else asyncio.get_running_loop()
-    self.__queue = asyncio.Queue()
-    self.__midi.set_callback(self.__callback)
     self.__isClosed = False
+    self.__queue = asyncio.Queue()
+    self.__isStreaming = False
   def __callback(self, msg, data):
     try:
       asyncio.run_coroutine_threadsafe(
@@ -52,16 +52,28 @@ class MIDIStream:
       )
     except RuntimeError:
       self.close()
+  def startStreaming(self):
+    if self.__isClosed:
+      raise Exception
+    if not self.__isStreaming:
+      self.__isStreaming = True
+      self.__midi.set_callback(self.__callback)
+  def stopStreaming(self):
+    if self.__isStreaming:
+      self.__midi.cancel_callback()
+      self.__isStreaming = False
+      self.__queue = asyncio.Queue()
   def __aiter__(self):
     return self
   async def __anext__(self):
-    if self.__isClosed:
+    if not self.__isStreaming:
       raise StopAsyncIteration
     result = await self.__queue.get()
     self.__queue.task_done()
     return result
   def close(self):
-    self.__isClosed = True
-    self.__midi.cancel_callback()
-    self.__midi.close_port()
-  
+    if not self.__isClosed:
+      self.__isClosed = True
+      if self.__isStreaming:
+        self.stopStreaming()
+      self.__midi.close_port()
